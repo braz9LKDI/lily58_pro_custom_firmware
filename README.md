@@ -1,59 +1,105 @@
-# QMK Userspace
+# Lily58 Pro custom firmware
 
-This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
+This repository is a fork of the [QMK userspace template](https://github.com/qmk/qmk_userspace) repository and contains my personal configuration of the [Lily58 Pro keyboard](https://github.com/kata0510/Lily58).
 
-## Howto configure your build targets
+## Current config
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. Enable userspace in QMK config using `qmk config user.overlay_dir="$(realpath qmk_userspace)"`
-1. Add a new keymap for your board using `qmk new-keymap`
-    * This will create a new keymap in the `keyboards` directory, in the same location that would normally be used in the main QMK repository. For example, if you wanted to add a keymap for the Planck, it will be created in `keyboards/planck/keymaps/<your keymap name>`
-    * You can also create a new keymap using `qmk new-keymap -kb <your_keyboard> -km <your_keymap>`
-    * Alternatively, add your keymap manually by placing it in the location specified above.
-    * `layouts/<layout name>/<your keymap name>/keymap.*` is also supported if you prefer the layout system
-1. Add your keymap(s) to the build by running `qmk userspace-add -kb <your_keyboard> -km <your_keymap>`
-    * This will automatically update your `qmk.json` file
-    * Corresponding `qmk userspace-remove -kb <your_keyboard> -km <your_keymap>` will delete it
-    * Listing the build targets can be done with `qmk userspace-list`
-1. Commit your changes
+This userspace currently builds one target:
 
-## Howto build with GitHub
+- `lily58/rev1:gray`.
 
-1. In the GitHub Actions tab, enable workflows
-1. Push your changes above to your forked GitHub repository
-1. Look at the GitHub Actions for a new actions run
-1. Wait for the actions run to complete
-1. Inspect the Releases tab on your repository for the latest firmware build
+### Layer layout summary
 
-## Howto build locally
+- `_BASE`: Colemak-DH style base layer.
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. `cd` into this repository's clone directory
-1. Set global userspace path: `qmk config user.overlay_dir="$(realpath .)"` -- you MUST be located in the cloned userspace location for this to work correctly
-    * This will be automatically detected if you've `cd`ed into your userspace repository, but the above makes your userspace available regardless of your shell location.
-1. Compile normally: `qmk compile -kb your_keyboard -km your_keymap` or `make your_keyboard:your_keymap`
+	```
+	,-------------------------------------.                ,-----------------------------------.
+	|   `   |  1  |  2  |  3  |  4  |  5  |                |  6  |  7  |  8  |  9  |  0  |  \  |
+	|-------+-----+-----+-----+-----+-----|                |-----+-----+-----+-----+-----+-----|
+	|  TAB  |  Q  |  W  |  F  |  P  |  B  |                |  J  |  L  |  U  |  Y  |  ;  |  -  |
+	|-------+-----+-----+-----+-----+-----|                |-----+-----+-----+-----+-----+-----|
+	| LCTRL |  A  |  R  |  S  |  T  |  G  |-----.    ,-----|  M  |  N  |  E  |  I  |  O  |  '  |
+	|-------+-----+-----+-----+-----+-----|  [  |    |  ]  |-----+-----+-----+-----+-----+-----|
+	| LSHFT |  Z  |  X  |  C  |  D  |  V  |-----|    |-----|  K  |  H  |  ,  |  .  |  /  |RSHFT|
+	`------------------------------------/     /     \      \----------------------------------'
+	             | LOWER | LGUI |LALT | /SPACE/       \ENTER \  | Bksp | ESC | RAISE |
+	             |       |      |     |/     /         \      \ |      |     |       |
+	             `--------------------''----'           '-----''--------------------'
+	```
 
-Alternatively, if you configured your build targets above, you can use `qmk userspace-compile` to build all of your userspace targets at once.
+- `_LOWER`: function row, media controls and numpad keys.
 
-## Extra info
+	```
+	,-----------------------------------------.                    ,-----------------------------------------.
+	|      |      |      |      |      |      |                    |      |      |      |      |      |      |
+	|------+------+------+------+------+------|                    |------+------+------+------+------+------|
+	|  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |                    |  F7  |  F8  |  F9  | F10  | F11  | F12  |
+	|------+------+------+------+------+------|                    |------+------+------+------+------+------|
+	| CAPS | KP1  | KP2  | KP3  | KP4  | KP5  |-------.    ,-------| KP6  | KP7  | KP8  | KP9  | KP0  |      |
+	|------+------+------+------+------+------| PLAY  |    |       |------+------+------+------+------+------|
+	|LSHFT | MPRV | VOLD | VOLU | MNXT | MUTE |-------|    |-------|PRINT |DEL   |      |      |      |      |
+	`-----------------------------------------/       /     \      \-----------------------------------------'
+	                  |      |      |      | /       /       \      \  | Bksp | RALT |      |
+	                  |      |      |      |/       /         \      \ |      |      |      |
+	                  `--------------------''------'           '------''--------------------'
+	```
 
-If you wish to point GitHub actions to a different repository, a different branch, or even a different keymap name, you can modify `.github/workflows/build_binaries.yml` to suit your needs.
+- `_RAISE`: navigation and symbol helpers.
 
-To override the `build` job, you can change the following parameters to use a different QMK repository or branch:
 ```
-    with:
-      qmk_repo: qmk/qmk_firmware
-      qmk_ref: master
+	,-------------------------------------.                ,-----------------------------------------.
+	|       |     |     |     |     |     |                |      |      |      |      |      |      |
+	|-------+-----+-----+-----+-----+-----|                |------+------+------+------+------+------|
+	|       |     |     |     |     |     |                |      |      | RGUI |      |      |      |
+	|-------+-----+-----+-----+-----+-----|                |------+------+------+------+------+------|
+	|       |     |     |     |     |     |-----.    ,-----|      | LEFT | DOWN |  UP  |RIGHT |      |
+	|-------+-----+-----+-----+-----+-----|     |    |     |------+------+------+------+------+------|
+	|       |     |     |     |     |     |-----|    |-----|      |  =   |NUMP- |NUMP+ |  |   |      |
+	`-------------------------------------/     /    \      \----------------------------------------'
+	               |GAMING|     |      | /     /      \      \ |      |      |      |
+	               |      |     |      |/     /        \      \|      |      |      |
+	               `-------------------''----'          '-----''--------------------'
 ```
 
-If you wish to manually manage `qmk_firmware` using git within the userspace repository, you can add `qmk_firmware` as a submodule in the userspace directory instead. GitHub Actions will automatically use the submodule at the pinned revision if it exists, otherwise it will use the default latest revision of `qmk_firmware` from the main repository.
+- `_GAMING`: QWERTY gaming layer.
 
-This can also be used to control which fork is used, though only upstream `qmk_firmware` will have support for external userspace until other manufacturers update their forks.
+	```
+		,-------------------------------------.                ,-----------------------------------.
+		|  ESC  |  1  |  2  |  3  |  4  |  5  |                |  6  |  7  |  8  |  9  |  0  |  \  |
+		|-------+-----+-----+-----+-----+-----|                |-----+-----+-----+-----+-----+-----|
+		|  TAB  |  Q  |  W  |  E  |  R  |  T  |                |  Y  |  U  |  I  |  O  |  P  |  -  |
+		|-------+-----+-----+-----+-----+-----|                |-----+-----+-----+-----+-----+-----|
+		| LCTRL |  A  |  S  |  D  |  F  |  G  |-----.    ,-----|  H  |  J  |  K  |  L  |  ;  |  '  |
+		|-------+-----+-----+-----+-----+-----|  [  |    |  ]  |-----+-----+-----+-----+-----+-----|
+		| LSHFT |  Z  |  X  |  C  |  V  |  B  |-----|    |-----|  N  |  M  |  ,  |  .  |  /  |RSHFT|
+		`------------------------------------/     /     \      \----------------------------------'
+		             |   M   |  Y   |LALT | /SPACE/       \ENTER \ |      |     |GAMING |
+		             |       |      |     |/     /         \      \|      |     |       |
+		             `--------------------''----'           '-----''--------------------'
+	```
 
-1. (First time only) `git submodule add https://github.com/qmk/qmk_firmware.git`
-1. (To update) `git submodule update --init --recursive`
-1. Commit your changes to your userspace repository
+### Layer behavior
+
+- `_LOWER` is activated with `MO(_LOWER)` from base.
+
+- `_RAISE` is activated with `MO(_RAISE)` from base.
+
+- `_GAMING` is toggled with `TG(_GAMING)`.
+
+- Pressing LOWER and RAISE together is treated as a combo state for display only (no tri-layer callback in `keymap.c`).
+
+### OLED behavior
+
+- Master side shows layer state, keylog, and keylogs.
+
+- Offhand side shows the logo.
+
+- Layer text rendering uses a keymap-local source file at `keyboards/lily58/rev1/keymaps/gray/layer_state_reader.c`.
+
+- `rules.mk` is configured to compile the local `layer_state_reader.c` file, so this repository's version is used by GitHub Actions.
+
+### Build commands:
+
+- Build all configured userspace targets: `qmk userspace-compile`.
+
+- Build this keymap directly: `qmk compile -kb lily58 -km gray`.
