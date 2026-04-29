@@ -14,3 +14,7 @@
 compile_commands.json
 .clangd/
 .cache/
+
+# Local AI assistant state
+.codex
+.codex/
